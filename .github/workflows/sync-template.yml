@@ -1,0 +1,28 @@
+name: Sync with Upstream
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs every day at midnight
+  workflow_dispatch: # Allows you to run it manually
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout your repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetches all history
+
+      - name: Sync from Template
+        uses: AndreasAugustin/actions-template-sync@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          source_repo: amclubs/am-cf-tunnel-sub
+          upstream_branch: main # Change to 'master' if the upstream uses that
+          pr_title: "Upstream Sync: New updates from amclubs"
+          pr_commit_msg: "chore: sync with upstream template"
